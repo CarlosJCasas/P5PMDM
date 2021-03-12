@@ -85,52 +85,36 @@ public class ModificarActivity extends AppCompatActivity {
         String fechaHora = calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
         fecha_edittext.setText(fechaHora);
         newFecha = tarea.getFechaLimite();
-        fecha_edittext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View dialog = View.inflate(ModificarActivity.this, R.layout.date_time_picker, null);
-                AlertDialog alertDialog = new AlertDialog.Builder(ModificarActivity.this).create();
-                dialog.findViewById(R.id.boton_date_time).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DatePicker datePicker = dialog.findViewById(R.id.date_picker);
-                        TimePicker timePicker = dialog.findViewById(R.id.timePicker);
+        fecha_edittext.setOnClickListener(v -> {
+            View dialog = View.inflate(ModificarActivity.this, R.layout.date_time_picker, null);
+            AlertDialog alertDialog = new AlertDialog.Builder(ModificarActivity.this).create();
+            dialog.findViewById(R.id.boton_date_time).setOnClickListener(v12 -> {
+                DatePicker datePicker = dialog.findViewById(R.id.date_picker);
+                TimePicker timePicker = dialog.findViewById(R.id.timePicker);
 
-                        Calendar calendario = new GregorianCalendar(datePicker.getYear(),
-                                datePicker.getMonth(),
-                                datePicker.getDayOfMonth(),
-                                timePicker.getHour(),
-                                timePicker.getMinute());
+                Calendar calendario = new GregorianCalendar(datePicker.getYear(),
+                        datePicker.getMonth(),
+                        datePicker.getDayOfMonth(),
+                        timePicker.getHour(),
+                        timePicker.getMinute());
 
-                        calendario.setTimeZone(TimeZone.getDefault());
-                        //Usar el calendario para poner el tiempo y la hora en el editText de fecha
+                calendario.setTimeZone(TimeZone.getDefault());
+                //Usar el calendario para poner el tiempo y la hora en el editText de fecha
 
-                        String fechaHora = calendario.get(Calendar.DAY_OF_MONTH) + "/" + calendario.get(Calendar.MONTH) + "/" + calendario.get(Calendar.YEAR) + " " + calendario.get(Calendar.HOUR_OF_DAY) + ":" + calendario.get(Calendar.MINUTE);
-                        fecha_edittext.setText(fechaHora);
-                        newFecha = calendario.getTimeInMillis();
-                        //Deberia notificar al adapter
+                String fechaHora1 = calendario.get(Calendar.DAY_OF_MONTH) + "/" + calendario.get(Calendar.MONTH) + "/" + calendario.get(Calendar.YEAR) + " " + calendario.get(Calendar.HOUR_OF_DAY) + ":" + calendario.get(Calendar.MINUTE);
+                fecha_edittext.setText(fechaHora1);
+                newFecha = calendario.getTimeInMillis();
+                //Deberia notificar al adapter
 
-                        alertDialog.dismiss();
-                    }
-                });
-                dialog.findViewById(R.id.botoncancelardatetime).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.setView(dialog);
-                alertDialog.show();
-            }
+                alertDialog.dismiss();
+            });
+            dialog.findViewById(R.id.botoncancelardatetime).setOnClickListener(v1 -> alertDialog.dismiss());
+            alertDialog.setView(dialog);
+            alertDialog.show();
         });
         //Tener favorita
         swtichMaterial.setChecked(tarea.isFavorito());
-        swtichMaterial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                newFavorito = isChecked;
-            }
-        });
+        swtichMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> newFavorito = isChecked);
         //Nombre de la localización
         String nombreCiudad = getNombreCiudad(tarea.getLatitud(), tarea.getLongitud());
         ubicacion_edittext.setText(nombreCiudad);
@@ -142,23 +126,20 @@ public class ModificarActivity extends AppCompatActivity {
         bundle.putDouble("longitud", tarea.getLongitud());
         fragmentMap.setArguments(bundle);
 
-        boton_aceptar_add_material.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Modificar la tarea
-                boolean newCompletado, newSelected;
-                newCompletado = tarea.isCompletado();
-                newSelected = tarea.isSelected();
-                tarea.setTitulo(newTitulo);
-                tarea.setFechaLimite(newFecha);
-                tarea.setFavorito(newFavorito);
-                tarea.setCompletado(newCompletado);
-                tarea.setSelected(newSelected);
-                tarea.setLongitud(recibirLongitud);
-                tarea.setLatitud(recibirLatitud);
-                myTareaLab.updateTarea(tarea);
-                finish();
-            }
+        boton_aceptar_add_material.setOnClickListener(v -> {
+            //Modificar la tarea
+            boolean newCompletado, newSelected;
+            newCompletado = tarea.isCompletado();
+            newSelected = tarea.isSelected();
+            tarea.setTitulo(newTitulo);
+            tarea.setFechaLimite(newFecha);
+            tarea.setFavorito(newFavorito);
+            tarea.setCompletado(newCompletado);
+            tarea.setSelected(newSelected);
+            tarea.setLongitud(recibirLongitud);
+            tarea.setLatitud(recibirLatitud);
+            myTareaLab.updateTarea(tarea);
+            finish();
         });
 
         boton_cancelar_add_material.setOnClickListener(v -> ModificarActivity.super.onBackPressed());

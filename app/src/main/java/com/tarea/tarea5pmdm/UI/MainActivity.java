@@ -57,25 +57,22 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         bottomNavigationView.setBackgroundColor(Color.TRANSPARENT);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch ((item.getItemId())) {
-                    case (R.id.menu_listacompleta):
-                        FragmentTransaction ftCompleta = getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, listaCompletaFragment);
-                        ftCompleta.commit();
-                        return true;
-                    case (R.id.menu_listafavorito):
-                        FragmentTransaction ftFavorito = getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, listaFavoritaFragment);
-                        ftFavorito.commit();
-                        return true;
-                    case (R.id.menu_listafinalizada):
-                        FragmentTransaction ftFinalizadas = getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, listaFinalizadasFragment);
-                        ftFinalizadas.commit();
-                        return true;
-                }
-                return false;
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch ((item.getItemId())) {
+                case (R.id.menu_listacompleta):
+                    FragmentTransaction ftCompleta = getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, listaCompletaFragment);
+                    ftCompleta.commit();
+                    return true;
+                case (R.id.menu_listafavorito):
+                    FragmentTransaction ftFavorito = getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, listaFavoritaFragment);
+                    ftFavorito.commit();
+                    return true;
+                case (R.id.menu_listafinalizada):
+                    FragmentTransaction ftFinalizadas = getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, listaFinalizadasFragment);
+                    ftFinalizadas.commit();
+                    return true;
             }
+            return false;
         });
     }
 
@@ -113,36 +110,27 @@ public class MainActivity extends AppCompatActivity {
             dialogBuilder.setCustomTitle(title);
 
             CharSequence[] cs = listaCaducadasNombre.toArray(new CharSequence[listaCaducadasNombre.size()]);
-            dialogBuilder.setMultiChoiceItems(cs, null, new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                    if (isChecked) {
-                        itemsSelected.add(listaCaducadasTareas.get(which));
-                    } else {
-                        itemsSelected.remove(listaCaducadasTareas.get(which));
-                    }
+            dialogBuilder.setMultiChoiceItems(cs, null, (dialog, which, isChecked) -> {
+                if (isChecked) {
+                    itemsSelected.add(listaCaducadasTareas.get(which));
+                } else {
+                    itemsSelected.remove(listaCaducadasTareas.get(which));
                 }
             });
-            dialogBuilder.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Hacer cosas de aceptar para eliminar las seleccionadas
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-                    builder.setTitle("¿Estás seguro?");
-                    builder.setMessage("Se eliminarán la/las tarea/as seleccionada/as");
-                    builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Eliminar las tareas
-                            for (Tarea t : itemsSelected) {
-                                myTareaLab.deleteTarea(t);
-                                notificarFragments();
-                            }
-                        }
-                    });
-                    builder.setNegativeButton("Cancelar", null);
-                    if (!itemsSelected.isEmpty()) builder.create().show();
-                }
+            dialogBuilder.setPositiveButton("Eliminar", (dialog, which) -> {
+                //Hacer cosas de aceptar para eliminar las seleccionadas
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+                builder.setTitle("¿Estás seguro?");
+                builder.setMessage("Se eliminarán la/las tarea/as seleccionada/as");
+                builder.setPositiveButton("Aceptar", (dialog1, which1) -> {
+                    //Eliminar las tareas
+                    for (Tarea t : itemsSelected) {
+                        myTareaLab.deleteTarea(t);
+                        notificarFragments();
+                    }
+                });
+                builder.setNegativeButton("Cancelar", null);
+                if (!itemsSelected.isEmpty()) builder.create().show();
             });
             dialogBuilder.setNegativeButton("Cancelar", null);
             if (!listaCaducadasTareas.isEmpty()) {

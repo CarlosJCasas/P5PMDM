@@ -81,7 +81,7 @@ public class AddActivity extends AppCompatActivity {
         listaRecordatorio.add(getResources().getString(R.string.horas));
         listaRecordatorio.add(getResources().getString(R.string.dias));
         stringArrayAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.tv_entidades, listaRecordatorio);
-        autoCompleteTextViewRecordatorio.setText(stringArrayAdapter.getItem(0).toString(), false);
+        autoCompleteTextViewRecordatorio.setText(stringArrayAdapter.getItem(0), false);
         autoCompleteTextViewRecordatorio.setThreshold(1);
         autoCompleteTextViewRecordatorio.setAdapter(stringArrayAdapter);
 
@@ -118,52 +118,36 @@ public class AddActivity extends AppCompatActivity {
         });
 
         //Fecha de vencimiento de la tarea
-        fecha_vencimiento.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View dialog = View.inflate(AddActivity.this, R.layout.date_time_picker, null);
-                AlertDialog alertDialog = new AlertDialog.Builder(AddActivity.this).create();
+        fecha_vencimiento.setOnClickListener(v -> {
+            View dialog = View.inflate(AddActivity.this, R.layout.date_time_picker, null);
+            AlertDialog alertDialog = new AlertDialog.Builder(AddActivity.this).create();
 
-                dialog.findViewById(R.id.boton_date_time).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DatePicker datePicker = dialog.findViewById(R.id.date_picker);
-                        TimePicker timePicker = dialog.findViewById(R.id.timePicker);
-                        fechaLimite = System.currentTimeMillis();
-                        Calendar calendario = new GregorianCalendar(datePicker.getYear(),
-                                datePicker.getMonth(),
-                                datePicker.getDayOfMonth(),
-                                timePicker.getHour(),
-                                timePicker.getMinute());
+            dialog.findViewById(R.id.boton_date_time).setOnClickListener(v1 -> {
+                DatePicker datePicker = dialog.findViewById(R.id.date_picker);
+                TimePicker timePicker = dialog.findViewById(R.id.timePicker);
+                fechaLimite = System.currentTimeMillis();
+                Calendar calendario = new GregorianCalendar(datePicker.getYear(),
+                        datePicker.getMonth(),
+                        datePicker.getDayOfMonth(),
+                        timePicker.getHour(),
+                        timePicker.getMinute());
 
-                        calendario.setTimeZone(TimeZone.getDefault());
-                        //Usar el calendario para poner el tiempo y la hora en el editText de fecha
+                calendario.setTimeZone(TimeZone.getDefault());
+                //Usar el calendario para poner el tiempo y la hora en el editText de fecha
 
-                        String fechaHora = String.format("%02d", calendario.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", calendario.get(Calendar.MONTH)) + "/" + String.format("%02d", calendario.get(Calendar.YEAR)) + " " + String.format("%02d", calendario.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendario.get(Calendar.MINUTE));
-                        fecha_vencimiento.setText(fechaHora);
-                        fechaLimite = calendario.getTimeInMillis();
-                        //Deberia notificar al adapter
-                        alertDialog.dismiss();
-                    }
-                });
-                dialog.findViewById(R.id.botoncancelardatetime).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.setView(dialog);
-                alertDialog.show();
-            }
+                String fechaHora = String.format("%02d", calendario.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", calendario.get(Calendar.MONTH)) + "/" + String.format("%02d", calendario.get(Calendar.YEAR)) + " " + String.format("%02d", calendario.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendario.get(Calendar.MINUTE));
+                fecha_vencimiento.setText(fechaHora);
+                fechaLimite = calendario.getTimeInMillis();
+                //Deberia notificar al adapter
+                alertDialog.dismiss();
+            });
+            dialog.findViewById(R.id.botoncancelardatetime).setOnClickListener(v12 -> alertDialog.dismiss());
+            alertDialog.setView(dialog);
+            alertDialog.show();
         });
 
         //Switch de tarea favorita
-        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                favorito = isChecked;
-            }
-        });
+        switch1.setOnCheckedChangeListener((buttonView, isChecked) -> favorito = isChecked);
 
         //Recordatorio
         recordatorioEditText.addTextChangedListener(new TextWatcher() {
@@ -188,41 +172,35 @@ public class AddActivity extends AppCompatActivity {
         });
         if (recordatorio != null) recordatorioTime = Long.parseLong(recordatorio);
 
-        autoCompleteTextViewRecordatorio.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = stringArrayAdapter.getItem(position);
-                switch (selectedItem) {
-                    case ("Min"):
-                        multiplicador = 60 * 1000;
-                        Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(0), Toast.LENGTH_LONG).show();
-                        break;
-                    case ("Horas"):
-                        multiplicador = 3600 * 1000;
-                        Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(1), Toast.LENGTH_LONG).show();
-                        break;
-                    case ("Dias"):
-                        multiplicador = 24 * 3600 * 1000;
-                        Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(2), Toast.LENGTH_LONG).show();
-                        break;
-                }
+        autoCompleteTextViewRecordatorio.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedItem = stringArrayAdapter.getItem(position);
+            switch (selectedItem) {
+                case ("Min"):
+                    multiplicador = 60 * 1000;
+                    Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(0), Toast.LENGTH_LONG).show();
+                    break;
+                case ("Horas"):
+                    multiplicador = 3600 * 1000;
+                    Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(1), Toast.LENGTH_LONG).show();
+                    break;
+                case ("Dias"):
+                    multiplicador = 24 * 3600 * 1000;
+                    Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(2), Toast.LENGTH_LONG).show();
+                    break;
             }
         });
 
         //Botones
-        boton_aceptar_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Tarea tarea = new Tarea(titulo, fechaLimite, favorito, false, false, recibirLongitud, recibirLatitud);
-                recordatorioTime *= multiplicador;
-                String channelID = tarea.getTitulo() + "_tarea";
-                createNotificationChannel(channelID);
-                crearNotificacionExpirar(tarea, channelID);
-                if (recordatorio != null)
-                    crearRecordatorio(tarea, channelID, recordatorioTime);
-                myTarealab.addTarea(tarea);
-                finish();
-            }
+        boton_aceptar_add.setOnClickListener(v -> {
+            Tarea tarea = new Tarea(titulo, fechaLimite, favorito, false, false, recibirLongitud, recibirLatitud);
+            recordatorioTime *= multiplicador;
+            String channelID = tarea.getTitulo() + "_tarea";
+            createNotificationChannel(channelID);
+            crearNotificacionExpirar(tarea, channelID);
+            if (recordatorio != null)
+                crearRecordatorio(tarea, channelID, recordatorioTime);
+            myTarealab.addTarea(tarea);
+            finish();
         });
         boton_cancelar_add.setOnClickListener(v -> AddActivity.super.onBackPressed());
 

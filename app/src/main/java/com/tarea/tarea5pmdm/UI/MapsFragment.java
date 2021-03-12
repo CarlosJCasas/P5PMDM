@@ -66,45 +66,39 @@ public class MapsFragment extends Fragment {
                 marker = mMap.addMarker(new MarkerOptions().position(localizacion).title(getString(R.string.yourLocation)));
             } else {
                 Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(requireActivity(), new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            lastLocation = task.getResult();
-                            if (lastLocation != null) {
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), DEFAULT_ZOOM));
-                                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).title(getString(R.string.yourLocation)));
-                                enviarLatitud = lastLocation.getLatitude();
-                                enviarLongitud = lastLocation.getLongitude();
-                                if (requireActivity() instanceof AddActivity)
-                                    ((AddActivity) requireActivity()).recibirDatosFragment(enviarLatitud, enviarLongitud);
-                                if (requireActivity() instanceof ModificarActivity)
-                                    ((ModificarActivity) requireActivity()).recibirDatosFragment(enviarLatitud, enviarLongitud);
-                            }
-                        } else {
-                            //Usar por default porque es null
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-                            marker = mMap.addMarker(new MarkerOptions().position(defaultLocation).title(getString(R.string.yourLocation)));
+                locationResult.addOnCompleteListener(requireActivity(), task -> {
+                    if (task.isSuccessful()) {
+                        lastLocation = task.getResult();
+                        if (lastLocation != null) {
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), DEFAULT_ZOOM));
+                            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).title(getString(R.string.yourLocation)));
+                            enviarLatitud = lastLocation.getLatitude();
+                            enviarLongitud = lastLocation.getLongitude();
+                            if (requireActivity() instanceof AddActivity)
+                                ((AddActivity) requireActivity()).recibirDatosFragment(enviarLatitud, enviarLongitud);
+                            if (requireActivity() instanceof ModificarActivity)
+                                ((ModificarActivity) requireActivity()).recibirDatosFragment(enviarLatitud, enviarLongitud);
                         }
+                    } else {
+                        //Usar por default porque es null
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+                        marker = mMap.addMarker(new MarkerOptions().position(defaultLocation).title(getString(R.string.yourLocation)));
                     }
                 });
             }
             if (requireActivity() instanceof AddActivity || requireActivity() instanceof ModificarActivity) {
-                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        if (marker != null) {
-                            marker.setPosition(latLng);
-                        } else {
-                            marker = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.yourLocation)));
-                        }
-                        enviarLatitud = latLng.latitude;
-                        enviarLongitud = latLng.longitude;
-                        if (requireActivity() instanceof AddActivity)
-                            ((AddActivity) requireActivity()).recibirDatosFragment(enviarLatitud, enviarLongitud);
-                        if (requireActivity() instanceof ModificarActivity)
-                            ((ModificarActivity) requireActivity()).recibirDatosFragment(enviarLatitud, enviarLongitud);
+                mMap.setOnMapClickListener(latLng -> {
+                    if (marker != null) {
+                        marker.setPosition(latLng);
+                    } else {
+                        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.yourLocation)));
                     }
+                    enviarLatitud = latLng.latitude;
+                    enviarLongitud = latLng.longitude;
+                    if (requireActivity() instanceof AddActivity)
+                        ((AddActivity) requireActivity()).recibirDatosFragment(enviarLatitud, enviarLongitud);
+                    if (requireActivity() instanceof ModificarActivity)
+                        ((ModificarActivity) requireActivity()).recibirDatosFragment(enviarLatitud, enviarLongitud);
                 });
             }
 
@@ -118,8 +112,7 @@ public class MapsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_maps, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override
