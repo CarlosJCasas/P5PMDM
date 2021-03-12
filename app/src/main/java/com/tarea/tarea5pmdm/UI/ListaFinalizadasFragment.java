@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ public class ListaFinalizadasFragment extends Fragment implements CustomAdapter.
     public List<Tarea> listaFinalizadas;
     public TareaLab myTareaLab;
     public View rootView;
+    private TextView sinTareas;
     public CustomAdapter myAdapter;
     public RecyclerView recyclerViewFinalizadas;
 
@@ -41,6 +43,8 @@ public class ListaFinalizadasFragment extends Fragment implements CustomAdapter.
 
         recyclerViewFinalizadas = rootView.findViewById(R.id.recycler_finalizada);
         recyclerViewFinalizadas.setLayoutManager(new LinearLayoutManager(requireActivity().getApplicationContext()));
+        sinTareas = rootView.findViewById(R.id.nohayelementosFin);
+
 
         myAdapter = new CustomAdapter(getContext(), (ArrayList<Tarea>) listaFinalizadas, this, this, this);
         myAdapter.setItemClickListener(this);
@@ -52,6 +56,7 @@ public class ListaFinalizadasFragment extends Fragment implements CustomAdapter.
     @Override
     public void onResume() {
         super.onResume();
+        sinTareas.setVisibility(listaFinalizadas.isEmpty() ? View.VISIBLE : View.INVISIBLE);
         listaFinalizadas.clear();
         listaFinalizadas.addAll(myTareaLab.getTareasCompletadas());
     }
@@ -74,7 +79,11 @@ public class ListaFinalizadasFragment extends Fragment implements CustomAdapter.
 
     @Override
     public void onItemLongClick(int position) {
-
+//        listaFinalizadas = myTareaLab.getTareasCompletadas();
+//        String id = listaFinalizadas.get(position).getTareaId();
+//        Intent intent = new Intent(requireActivity(),ModificarActivity.class);
+//        intent.putExtra("id",id);
+//        startActivity(intent);
     }
 
     @Override

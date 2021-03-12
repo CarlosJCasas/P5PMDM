@@ -1,6 +1,7 @@
 package com.tarea.tarea5pmdm.Core;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

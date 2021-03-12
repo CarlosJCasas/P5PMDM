@@ -7,4 +7,6 @@
     <string name="min">Min</string>
     <string name="horas">Horas</string>
     <string name="dias">Dias</string>
+    <string name="tareaVencida">Tareas vencidas</string>
+    <string name="no_hay_elementos">No hay elementos</string>
 </resources>

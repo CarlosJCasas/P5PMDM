@@ -139,7 +139,7 @@ public class AddActivity extends AppCompatActivity {
                         calendario.setTimeZone(TimeZone.getDefault());
                         //Usar el calendario para poner el tiempo y la hora en el editText de fecha
 
-                        String fechaHora = calendario.get(Calendar.DAY_OF_MONTH) + "/" + calendario.get(Calendar.MONTH) + "/" + calendario.get(Calendar.YEAR) + " " + calendario.get(Calendar.HOUR_OF_DAY) + ":" + calendario.get(Calendar.MINUTE);
+                        String fechaHora = String.format("%02d",calendario.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",calendario.get(Calendar.MONTH)) + "/" + String.format("%02d",calendario.get(Calendar.YEAR)) + " " + String.format("%02d",calendario.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d",calendario.get(Calendar.MINUTE));
                         fecha_vencimiento.setText(fechaHora);
                         fechaLimite = calendario.getTimeInMillis();
                         //Deberia notificar al adapter
@@ -209,7 +209,6 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-
         //Botones
         boton_aceptar_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,17 +219,12 @@ public class AddActivity extends AppCompatActivity {
                 createNotificationChannel(channelID);
                 crearNotificacionExpirar(tarea, channelID);
                 if (recordatorio != null)
-                    crearRecordatorio(tarea, channelID + "_recordar", recordatorioTime);
+                    crearRecordatorio(tarea, channelID, recordatorioTime);
                 myTarealab.addTarea(tarea);
                 finish();
             }
         });
-        boton_cancelar_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddActivity.super.onBackPressed();
-            }
-        });
+        boton_cancelar_add.setOnClickListener(v -> AddActivity.super.onBackPressed());
 
     }
 
@@ -271,7 +265,7 @@ public class AddActivity extends AppCompatActivity {
         intent.putExtra("titulo", titulo);
         intent.putExtra("texto", texto);
         intent.putExtra("channelid", channelID);
-        
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(AddActivity.this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

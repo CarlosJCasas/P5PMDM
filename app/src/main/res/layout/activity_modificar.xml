@@ -37,21 +37,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
 
         android:hint="Fecha"
-        app:startIconDrawable="@drawable/ic_baseline_date_range_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_layoutmaterial">
+        app:layout_constraintTop_toBottomOf="@+id/title_layoutmaterial"
+        app:startIconDrawable="@drawable/ic_baseline_date_range_24">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fecha_edittext"
-            android:clickable="true"
-            android:focusable="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,20 +60,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
+        android:clickable="true"
         android:drawableStart="@drawable/ic_baseline_star_24"
         android:drawablePadding="15dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:text="Favorita"
-        android:clickable="true"
 
         android:textColor="#5D5C5B"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fecha_layoutmaterial" />
+
+
+
 
     <fragment
         android:id="@+id/fragment_material_map_modificar"
@@ -118,7 +121,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:clickable="false"
         android:focusable="false"
@@ -130,9 +133,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ubicacion_edittext"
-            android:clickable="false"
-            android:focusable="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

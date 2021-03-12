@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ public class ListaCompletaFragment extends Fragment implements CustomAdapter.Ite
     public static ListaCompletaFragment listaCompletaFragment;
     public List<Tarea> listaCompleta = new ArrayList<>();
     public TareaLab myTareaLab;
+    private TextView sinTareas;
     public View rootView;
     public CustomAdapter myAdapter;
     public RecyclerView recyclerViewCompleta;
@@ -39,6 +41,8 @@ public class ListaCompletaFragment extends Fragment implements CustomAdapter.Ite
 
         recyclerViewCompleta = rootView.findViewById(R.id.recycler_completa);
         recyclerViewCompleta.setLayoutManager(new LinearLayoutManager(requireActivity().getApplicationContext()));
+        sinTareas = rootView.findViewById(R.id.nohayelementosCom);
+
 
         myAdapter = new CustomAdapter(getContext(), (ArrayList<Tarea>) listaCompleta, this, this, this);
         myAdapter.setItemClickListener(this);
@@ -51,6 +55,7 @@ public class ListaCompletaFragment extends Fragment implements CustomAdapter.Ite
     @Override
     public void onResume() {
         super.onResume();
+        sinTareas.setVisibility(listaCompleta.isEmpty() ? View.VISIBLE : View.INVISIBLE);
         listaCompleta.clear();
         listaCompleta.addAll(myTareaLab.getTareasIncompletas());
     }

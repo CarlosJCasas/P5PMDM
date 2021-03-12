@@ -1,15 +1,13 @@
 package com.tarea.tarea5pmdm.UI;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.Menu;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.tarea.tarea5pmdm.Core.Tarea;
 import com.tarea.tarea5pmdm.DDBB.TareaLab;
 import com.tarea.tarea5pmdm.R;
@@ -32,8 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private ListaFinalizadasFragment listaFinalizadasFragment;
     private TareaLab myTareaLab;
     private List<Tarea> listaTareas;
-    private List<Tarea> listaCaducadas;
-
+    private List<String> listaCaducadasNombre;
+    private List<Tarea> listaCaducadasTareas;
+    private boolean control;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         myTareaLab = TareaLab.get(this);
         listaTareas = myTareaLab.getTareas();
-
+        control = true;
         listaCompletaFragment = new ListaCompletaFragment();
         listaFavoritaFragment = new ListaFavoritaFragment();
         listaFinalizadasFragment = new ListaFinalizadasFragment();
@@ -82,61 +82,76 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        notificarFragments();
+
         //Lista de caducadas
-        listaCaducadas = new ArrayList<>();
-        for (Tarea tarea : listaTareas) {
-            long horaDia = Calendar.getInstance().getTimeInMillis();
-            if (tarea.getFechaLimite() < horaDia) {
-                listaCaducadas.add(tarea);
+        if(control) {
+            listaCaducadasNombre = new ArrayList<>();
+            listaCaducadasTareas = new ArrayList<>();
+            listaCaducadasNombre.clear();
+            listaCaducadasTareas.clear();
+            listaTareas = myTareaLab.getTareas();
+            for (Tarea tarea : listaTareas) {
+                long horaDia = Calendar.getInstance().getTimeInMillis();
+                if (tarea.getFechaLimite() < horaDia && !tarea.isCompletado() && tarea.getFechaLimite() != 0) {
+                    listaCaducadasNombre.add(tarea.getTitulo());
+                    listaCaducadasTareas.add(tarea);
+                }
+            }
+
+            List<Tarea> itemsSelected = new ArrayList<>();
+            itemsSelected.clear();
+            //Creamos un alertdialog
+            MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this);
+            dialogBuilder.setView(R.layout.dialogo_caducadas);
+            TextView title = new TextView(this);
+            title.setText(R.string.tareaVencida);
+            title.setBackgroundColor(getResources().getColor(R.color.primaryBlue700));
+            title.setTextSize(21);
+            title.setPadding(16,16,16,16);
+            title.setTextColor(getResources().getColor(R.color.white));
+            title.setGravity(Gravity.CENTER);
+            dialogBuilder.setCustomTitle(title);
+
+            CharSequence[] cs = listaCaducadasNombre.toArray(new CharSequence[listaCaducadasNombre.size()]);
+            dialogBuilder.setMultiChoiceItems(cs, null, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    if (isChecked) {
+                        itemsSelected.add(listaCaducadasTareas.get(which));
+                    } else {
+                        itemsSelected.remove(listaCaducadasTareas.get(which));
+                    }
+                }
+            });
+            dialogBuilder.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Hacer cosas de aceptar para eliminar las seleccionadas
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+                    builder.setTitle("¿Estás seguro?");
+                    builder.setMessage("Se eliminarán la/las tarea/as seleccionada/as");
+                    builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Eliminar las tareas
+                            for (Tarea t : itemsSelected) {
+                                myTareaLab.deleteTarea(t);
+                                notificarFragments();
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Cancelar", null);
+                    if (!itemsSelected.isEmpty()) builder.create().show();
+                }
+            });
+            dialogBuilder.setNegativeButton("Cancelar", null);
+            if (!listaCaducadasTareas.isEmpty()) {
+                dialogBuilder.create().show();
             }
         }
-//        List<Tarea> itemsSelected = new ArrayList<>();
-//        //Creamos un alertdialog
-//        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this);
-//        dialogBuilder.setView(R.layout.dialogo_caducadas);
-//        dialogBuilder.setTitle("Tareas vencidas");
-//        CharSequence[] cs = listaCaducadas.toArray(new CharSequence[listaCaducadas.size()]);
-//        dialogBuilder.setMultiChoiceItems(cs, null, new DialogInterface.OnMultiChoiceClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-//                if (isChecked) {
-//                    itemsSelected.add(listaCaducadas.get(which));
-//                } else {
-//                    itemsSelected.remove(listaCaducadas.get(which));
-//                }
-//            }
-//        });
-//        dialogBuilder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                //Hacer cosas de aceptar para eliminar las seleccionadas
-//                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-//                builder.setTitle("¿Estás seguro?");
-//                builder.setMessage("Se eliminarán la/las tarea/as seleccionada/as");
-//                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        //Eliminar las tareas
-//                    }
-//                });
-//                builder.setNegativeButton("Cancelar", null);
-//            }
-//        });
-//        dialogBuilder.setNegativeButton("Cancelar", null);
-//        dialogBuilder.create().show();
-
-
-//        actualizarListados();
-//        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame_fragment);
-//        if(currentFragment instanceof ListaCompletaFragment){
-//            ((ListaCompletaFragment) currentFragment).myAdapter.notifyDataSetChanged();
-//        }else if (currentFragment instanceof ListaFavoritaFragment){
-//            ((ListaFavoritaFragment) currentFragment).myAdapter.notifyDataSetChanged();
-//        }else if (currentFragment instanceof ListaFinalizadasFragment){
-//            ((ListaFinalizadasFragment) currentFragment).myAdapter.notifyDataSetChanged();
-//        }
-        //Consultar cuando estan caducadas las tareas
+//        //Notificar a los fragments
+        control = false;
+        notificarFragments();
     }
 
     //Cuando se pulsa el boton de add

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ public class ListaFavoritaFragment extends Fragment implements CustomAdapter.Ite
     public List<Tarea> listaFavorita;
     public TareaLab myTareaLab;
     public View rootView;
+    private TextView sinTareas;
     public CustomAdapter myAdapter;
     public RecyclerView recyclerViewFavoritas;
 
@@ -41,6 +43,8 @@ public class ListaFavoritaFragment extends Fragment implements CustomAdapter.Ite
 
         recyclerViewFavoritas = rootView.findViewById(R.id.recycler_favorita);
         recyclerViewFavoritas.setLayoutManager(new LinearLayoutManager(requireActivity().getApplicationContext()));
+        sinTareas = rootView.findViewById(R.id.nohayelementosFav);
+
 
         myAdapter = new CustomAdapter(getContext(), (ArrayList<Tarea>) listaFavorita, this, this, this);
         myAdapter.setItemClickListener(this);
@@ -52,6 +56,7 @@ public class ListaFavoritaFragment extends Fragment implements CustomAdapter.Ite
     @Override
     public void onResume() {
         super.onResume();
+        sinTareas.setVisibility(listaFavorita.isEmpty() ? View.VISIBLE : View.INVISIBLE);
         listaFavorita.clear();
         listaFavorita.addAll(myTareaLab.getTareasFavoritas());
     }
@@ -61,7 +66,7 @@ public class ListaFavoritaFragment extends Fragment implements CustomAdapter.Ite
 
         listaFavorita = myTareaLab.getTareasFavoritas();
         String id = listaFavorita.get(position).getTareaId();
-        Intent intent = new Intent(requireActivity(),MostrarActivity.class);
+        Intent intent = new Intent(requireActivity(),ModificarActivity.class);
         intent.putExtra("id",id);
         startActivity(intent);
     }

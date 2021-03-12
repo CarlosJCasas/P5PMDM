@@ -161,7 +161,7 @@ public class ModificarActivity extends AppCompatActivity {
             }
         });
 
-        boton_cancelar_add_material.setOnClickListener(v -> finish());
+        boton_cancelar_add_material.setOnClickListener(v -> ModificarActivity.super.onBackPressed());
 
     }
 
