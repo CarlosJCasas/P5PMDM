@@ -56,7 +56,7 @@ public class MapsFragment extends Fragment {
             }
             mMap.setMyLocationEnabled(true);
 
-            if (getArguments() != null && (requireActivity() instanceof MostrarActivity || requireActivity() instanceof  ModificarActivity)) {
+            if (getArguments() != null && (requireActivity() instanceof MostrarActivity || requireActivity() instanceof ModificarActivity)) {
                 //Si recibe argumentos es el de modificar
                 mMap.setMyLocationEnabled(false);
                 double latitud = getArguments().getDouble("latitud");

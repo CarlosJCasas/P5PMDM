@@ -26,9 +26,9 @@ public class ListaFavoritaFragment extends Fragment implements CustomAdapter.Ite
     public List<Tarea> listaFavorita;
     public TareaLab myTareaLab;
     public View rootView;
-    private TextView sinTareas;
     public CustomAdapter myAdapter;
     public RecyclerView recyclerViewFavoritas;
+    private TextView sinTareas;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,8 +66,8 @@ public class ListaFavoritaFragment extends Fragment implements CustomAdapter.Ite
 
         listaFavorita = myTareaLab.getTareasFavoritas();
         String id = listaFavorita.get(position).getTareaId();
-        Intent intent = new Intent(requireActivity(),ModificarActivity.class);
-        intent.putExtra("id",id);
+        Intent intent = new Intent(requireActivity(), ModificarActivity.class);
+        intent.putExtra("id", id);
         startActivity(intent);
     }
 

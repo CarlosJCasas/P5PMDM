@@ -25,10 +25,10 @@ public class ListaCompletaFragment extends Fragment implements CustomAdapter.Ite
     public static ListaCompletaFragment listaCompletaFragment;
     public List<Tarea> listaCompleta = new ArrayList<>();
     public TareaLab myTareaLab;
-    private TextView sinTareas;
     public View rootView;
     public CustomAdapter myAdapter;
     public RecyclerView recyclerViewCompleta;
+    private TextView sinTareas;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -1,13 +1,11 @@
 package com.tarea.tarea5pmdm.Core;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -18,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.tarea.tarea5pmdm.DDBB.TareaLab;
 import com.tarea.tarea5pmdm.R;
-import com.tarea.tarea5pmdm.UI.ListaCompletaFragment;
-import com.tarea.tarea5pmdm.UI.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,12 +23,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+    private final RefrescarInterfaz refrescarInterfaz;
     public LayoutInflater myInflater;
     public List<Tarea> listaTareas;
     public Context context;
     private ItemClickListener itemClickListener;
     private ItemLongClickListener itemLongClickListener;
-    private final RefrescarInterfaz refrescarInterfaz;
 
     public CustomAdapter(Context context, ArrayList<Tarea> listaTareas, ItemClickListener itemClickListener, ItemLongClickListener itemLongClickListener, RefrescarInterfaz refrescarInterfaz) {
         this.context = context;
@@ -57,10 +53,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         holder.tituloTv.setText(tarea.getTitulo());
         if (tarea.getFechaLimite() != 0) {
             holder.fechaTv.setText(fechaLongString(tarea.getFechaLimite()));
-            if(tarea.getFechaLimite()<Calendar.getInstance().getTimeInMillis() && tarea.getFechaLimite() != 0) {
+            if (tarea.getFechaLimite() < Calendar.getInstance().getTimeInMillis() && tarea.getFechaLimite() != 0) {
                 holder.tituloTv.setTextColor(Color.RED);
             }
-        }else{
+        } else {
             holder.fechaTv.setVisibility(View.GONE);
             holder.tituloTv.setTextColor(Color.BLACK);
         }
@@ -91,11 +87,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             int posicion = holder.getAdapterPosition();
             listaTareas.remove(posicion);
             notifyItemRemoved(posicion);
-            Snackbar.make(holder.eliminarButton, "\""+tarea.getTitulo() + "\" ha sido eliminada.", Snackbar.LENGTH_SHORT)
-                    .addCallback(new Snackbar.Callback(){
+            Snackbar.make(holder.eliminarButton, "\"" + tarea.getTitulo() + "\" ha sido eliminada.", Snackbar.LENGTH_SHORT)
+                    .addCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar transientBottomBar, int event) {
-                            switch (event){
+                            switch (event) {
                                 case (Snackbar.Callback.DISMISS_EVENT_ACTION):
                                     listaTareas.add(posicion, tarea);
                                     notifyItemInserted(posicion);
@@ -131,16 +127,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         this.itemClickListener = itemClickListener;
     }
 
-    public interface ItemClickListener {
-        void onItemClick(int position);
-    }
-
-    public void setItemLongClickListener(ItemLongClickListener itemLongClickListener){
+    public void setItemLongClickListener(ItemLongClickListener itemLongClickListener) {
         this.itemLongClickListener = itemLongClickListener;
-    }
-
-    public interface ItemLongClickListener{
-        void onItemLongClick(int position);
     }
 
     public void actualizarListado(ArrayList<Tarea> listaTareas) {
@@ -152,9 +140,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public String fechaLongString(long fecha) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(fecha);
-        String fechaHora = String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",calendar.get(Calendar.MONTH)) + "/" + String.format("%02d",calendar.get(Calendar.YEAR)) + " " + String.format("%02d",calendar.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d",calendar.get(Calendar.MINUTE));
+        String fechaHora = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", calendar.get(Calendar.MONTH)) + "/" + String.format("%02d", calendar.get(Calendar.YEAR)) + " " + String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendar.get(Calendar.MINUTE));
 
         return fechaHora;
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public interface ItemLongClickListener {
+        void onItemLongClick(int position);
     }
         /*
         ¡¡¡¡¡¡VIEWHOLDER!!!!!
@@ -198,7 +194,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         @Override
         public boolean onLongClick(View v) {
-            if(itemLongClickListener != null)
+            if (itemLongClickListener != null)
                 itemLongClickListener.onItemLongClick(getAdapterPosition());
             return true;
         }

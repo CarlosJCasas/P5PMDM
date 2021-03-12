@@ -26,9 +26,9 @@ public class ListaFinalizadasFragment extends Fragment implements CustomAdapter.
     public List<Tarea> listaFinalizadas;
     public TareaLab myTareaLab;
     public View rootView;
-    private TextView sinTareas;
     public CustomAdapter myAdapter;
     public RecyclerView recyclerViewFinalizadas;
+    private TextView sinTareas;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -8,7 +8,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.tarea.tarea5pmdm.R;
-import com.tarea.tarea5pmdm.UI.MainActivity;
 
 import java.util.Random;
 

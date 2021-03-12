@@ -34,9 +34,9 @@ public class ModificarActivity extends AppCompatActivity {
     long newFecha;
     boolean newFavorito;
     double recibirLatitud, recibirLongitud;
+    Tarea tarea;
     private TareaLab myTareaLab;
     private TextInputEditText ubicacion_edittext;
-    Tarea tarea;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +154,7 @@ public class ModificarActivity extends AppCompatActivity {
                 tarea.setFavorito(newFavorito);
                 tarea.setCompletado(newCompletado);
                 tarea.setSelected(newSelected);
-                tarea.setLongitud( recibirLongitud);
+                tarea.setLongitud(recibirLongitud);
                 tarea.setLatitud(recibirLatitud);
                 myTareaLab.updateTarea(tarea);
                 finish();

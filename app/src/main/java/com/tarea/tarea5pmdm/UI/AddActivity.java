@@ -139,7 +139,7 @@ public class AddActivity extends AppCompatActivity {
                         calendario.setTimeZone(TimeZone.getDefault());
                         //Usar el calendario para poner el tiempo y la hora en el editText de fecha
 
-                        String fechaHora = String.format("%02d",calendario.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",calendario.get(Calendar.MONTH)) + "/" + String.format("%02d",calendario.get(Calendar.YEAR)) + " " + String.format("%02d",calendario.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d",calendario.get(Calendar.MINUTE));
+                        String fechaHora = String.format("%02d", calendario.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", calendario.get(Calendar.MONTH)) + "/" + String.format("%02d", calendario.get(Calendar.YEAR)) + " " + String.format("%02d", calendario.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendario.get(Calendar.MINUTE));
                         fecha_vencimiento.setText(fechaHora);
                         fechaLimite = calendario.getTimeInMillis();
                         //Deberia notificar al adapter
@@ -195,15 +195,15 @@ public class AddActivity extends AppCompatActivity {
                 switch (selectedItem) {
                     case ("Min"):
                         multiplicador = 60 * 1000;
-                        Toast.makeText(getApplicationContext(),stringArrayAdapter.getItem(0),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(0), Toast.LENGTH_LONG).show();
                         break;
                     case ("Horas"):
                         multiplicador = 3600 * 1000;
-                        Toast.makeText(getApplicationContext(),stringArrayAdapter.getItem(1),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(1), Toast.LENGTH_LONG).show();
                         break;
                     case ("Dias"):
                         multiplicador = 24 * 3600 * 1000;
-                        Toast.makeText(getApplicationContext(),stringArrayAdapter.getItem(2),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), stringArrayAdapter.getItem(2), Toast.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -244,7 +244,7 @@ public class AddActivity extends AppCompatActivity {
     public void crearNotificacionExpirar(Tarea tarea, String channelID) {
         int requestcode = new Random().nextInt(100);
         String titulo = "Tarea expirada.";
-        String texto = "La tarea "+ tarea.getTitulo() + " ha vencido." ;
+        String texto = "La tarea " + tarea.getTitulo() + " ha vencido.";
         Intent intent = new Intent(AddActivity.this, ReminderBroadcast.class);
         intent.putExtra("titulo", titulo);
         intent.putExtra("texto", texto);

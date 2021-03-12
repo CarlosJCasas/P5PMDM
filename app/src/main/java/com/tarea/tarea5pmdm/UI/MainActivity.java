@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         //Lista de caducadas
-        if(control) {
+        if (control) {
             listaCaducadasNombre = new ArrayList<>();
             listaCaducadasTareas = new ArrayList<>();
             listaCaducadasNombre.clear();
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             title.setText(R.string.tareaVencida);
             title.setBackgroundColor(getResources().getColor(R.color.primaryBlue700));
             title.setTextSize(21);
-            title.setPadding(16,16,16,16);
+            title.setPadding(16, 16, 16, 16);
             title.setTextColor(getResources().getColor(R.color.white));
             title.setGravity(Gravity.CENTER);
             dialogBuilder.setCustomTitle(title);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void notificarFragments(){
+    public void notificarFragments() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame_fragment);
         if (currentFragment instanceof ListaCompletaFragment) {
             ((ListaCompletaFragment) currentFragment).actualizarListado();
