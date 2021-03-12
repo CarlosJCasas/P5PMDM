@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Tarea5PMDM</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Selecciona ubicación</string>
+    <string name="yourLocation">Tu ubicación</string>
+    <string name="min">Min</string>
+    <string name="horas">Horas</string>
+    <string name="dias">Dias</string>
+</resources>
